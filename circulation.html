@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Issue & Return{% endblock %}{% block crumb %}Issue & Return{% endblock %}
+{% block content %}
+<div class="welcome-row"><div><div class="eyebrow">CIRCULATION</div><h1>Issue & Return</h1><p class="subtitle">Lend books to students and record returns.</p></div></div>
+<div class="split-layout circulation-layout">
+<section class="panel form-panel"><div class="panel-heading"><div><h2>Issue a book</h2><p>Choose a book and registered student.</p></div><span class="heading-icon">⇄</span></div>
+<form method="post" class="stack-form">
+<label>Available book <select name="book_id" required><option value="">Select a book</option>{% for b in books %}<option value="{{ b.id }}">{{ b.title }} — {{ b.author }} ({{ b.quantity }} available)</option>{% endfor %}</select></label>
+<label>Student <select name="student_id" required><option value="">Select a student</option>{% for s in students %}<option value="{{ s.id }}">{{ s.name }} ({{ s.student_no }})</option>{% endfor %}</select></label>
+<label>Due date <input type="date" name="due_date" min="{{ today }}" required></label>
+<button class="button primary full" type="submit">Issue book</button>
+{% if not books %}<p class="form-hint">No books available. Add a book or return an issued copy first.</p>{% endif %}
+{% if not students %}<p class="form-hint">Register a student before issuing a book.</p>{% endif %}
+</form></section>
+<section class="panel catalog-panel"><div class="panel-heading"><div><h2>Issue history</h2><p>Current loans and previous returns.</p></div><span class="pill neutral">{{ loans|length }} records</span></div>
+<div class="table-wrap"><table><thead><tr><th>BOOK / STUDENT</th><th>ISSUED</th><th>DUE</th><th>STATUS / ACTION</th></tr></thead><tbody>
+{% for l in loans %}<tr><td><div class="primary-cell">{{ l.book_title }}</div><div class="secondary-cell">{{ l.student_name }} · {{ l.student_no }}</div></td><td>{{ l.issue_date }}</td><td>{{ l.due_date }}</td><td>{% if l.status == 'Issued' %}<form method="post" action="{{ url_for('return_book', loan_id=l.id) }}"><button class="button small success" type="submit">Mark returned</button></form>{% else %}<span class="pill green">Returned</span><div class="secondary-cell">{{ l.return_date }}</div>{% endif %}</td></tr>
+{% else %}<tr><td colspan="4"><div class="table-empty">No issue records yet.</div></td></tr>{% endfor %}
+</tbody></table></div></section>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}{% block crumb %}Students{% endblock %}
+{% block content %}
+<div class="welcome-row"><div><div class="eyebrow">MEMBERS</div><h1>Students <span class="count-chip">{{ students|length }}</span></h1><p class="subtitle">Register members and keep their contact information organized.</p></div></div>
+<div class="split-layout">
+<section class="panel form-panel"><div class="panel-heading"><div><h2>Register a student</h2><p>Student ID must be unique.</p></div><span class="heading-icon">＋</span></div>
+<form method="post" class="stack-form">
+<label>Full name <input name="name" required placeholder="Student full name"></label>
+<label>Student ID <input name="student_no" required placeholder="e.g. CST-2026-001"></label>
+<label>Phone number <input name="phone" placeholder="e.g. 01XXXXXXXXX"></label>
+<label>Email address <input name="email" type="email" placeholder="student@example.com"></label>
+<button class="button primary full" type="submit">＋ Register student</button>
+</form></section>
+<section class="panel catalog-panel"><div class="panel-heading"><div><h2>Student directory</h2><p>Registered library members.</p></div></div>
+<form class="search-form" method="get"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Search name, ID or phone..."><button class="button secondary" type="submit">Search</button>{% if q %}<a class="clear-link" href="{{ url_for('students') }}">Clear</a>{% endif %}</form>
+<div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>CONTACT</th><th>ACTIVE LOANS</th><th></th></tr></thead><tbody>
+{% for s in students %}<tr><td><div class="student-cell"><span class="student-avatar">{{ s.name[:1]|upper }}</span><span><strong>{{ s.name }}</strong><small>{{ s.student_no }}</small></span></div></td><td>{{ s.phone or s.email or '—' }}</td><td><span class="pill {{ 'blue' if s.active_loans else 'neutral' }}">{{ s.active_loans }}</span></td><td><form method="post" action="{{ url_for('delete_student', student_id=s.id) }}" data-confirm="Delete this student?"><button class="icon-button danger" title="Delete student" aria-label="Delete student">×</button></form></td></tr>
+{% else %}<tr><td colspan="4"><div class="table-empty">No students found. Register a student using the form.</div></td></tr>{% endfor %}
+</tbody></table></div></section>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}LibraryDesk{% endblock %} · LibraryDesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">L</span><span>Library<span class="brand-light">Desk</span><small>MANAGEMENT PORTAL</small></span></a>
+    <div class="nav-caption">WORKSPACE</div>
+    <nav>
+      <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}"><span>▦</span> Dashboard</a>
+      <a class="nav-link {% if request.endpoint == 'books' %}active{% endif %}" href="{{ url_for('books') }}"><span>▤</span> Books <span class="nav-arrow">›</span></a>
+      <a class="nav-link {% if request.endpoint == 'students' %}active{% endif %}" href="{{ url_for('students') }}"><span>♙</span> Students <span class="nav-arrow">›</span></a>
+      <a class="nav-link {% if request.endpoint == 'circulation' %}active{% endif %}" href="{{ url_for('circulation') }}"><span>⇄</span> Issue & Return <span class="nav-arrow">›</span></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="help-icon">?</div><div><strong>Library workspace</strong><p>Keep your collection organized.</p></div></div>
+    <div class="sidebar-footer"><span class="status-dot"></span> Local database connected</div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">Workspace <span>/</span> <strong>{% block crumb %}Dashboard{% endblock %}</strong></div>
+      <div class="top-actions"><span class="today-label">LIBRARY ADMIN</span><div class="avatar">LA</div></div>
+    </header>
+    <section class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}<button type="button" class="flash-close" aria-label="Dismiss">×</button></div>{% endfor %}</div>{% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer class="page-footer">LibraryDesk <span>·</span> Library Management System <span class="footer-right">Built for learning & demonstration</span></footer>
+    </section>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
